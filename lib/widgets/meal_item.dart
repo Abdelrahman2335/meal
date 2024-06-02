@@ -5,9 +5,11 @@ import 'package:transparent_image/transparent_image.dart';
 import '../models/meal.dart';
 
 class MealItem extends StatelessWidget {
-  const MealItem({super.key, required this.meal});
+  const MealItem({super.key, required this.meal,required this.onSelectMeal});
 
   final Meal meal;
+
+  final void Function(Meal meal) onSelectMeal;
 
   @override
   Widget build(BuildContext context) {
@@ -40,16 +42,17 @@ class MealItem extends StatelessWidget {
       /// the shape that you have done in the Card will not apply on the child,
       /// so we will use clipBehavior to control this child and apply the shape
       child: InkWell(
-          onTap: () {},
+          onTap: () => onSelectMeal,
           child: Stack(
             children: [
+
               /// FadeInImage is a widget that allow you to set a placeholder image while the real image loading
               FadeInImage(
                 placeholder:
 
-                    ///we used the transparentImage package so we can use it with MemoryImage,
-                    /// simply it give you transparent image while the real image loading
-                    MemoryImage(kTransparentImage),
+                ///we used the transparentImage package so we can use it with MemoryImage,
+                /// simply it give you transparent image while the real image loading
+                MemoryImage(kTransparentImage),
                 // const AssetImage("images/waiting.png"),
                 image: NetworkImage(meal.imageUrl),
               ),
@@ -61,10 +64,11 @@ class MealItem extends StatelessWidget {
                 right: 0,
                 child: Container(
                   padding:
-                      const EdgeInsets.symmetric(vertical: 6, horizontal: 30),
+                  const EdgeInsets.symmetric(vertical: 6, horizontal: 30),
                   color: Colors.black54,
                   child: Column(
                     children: [
+
                       ///this will make max lines 2 and if there is any overflow will write => ...
                       Text(
                         meal.title,
