@@ -63,6 +63,7 @@ class MealItem extends StatelessWidget {
                 left: 0,
                 right: 0,
                 child: Container(
+
                   padding:
                   const EdgeInsets.symmetric(vertical: 6, horizontal: 30),
                   color: Colors.black54,
@@ -84,9 +85,7 @@ class MealItem extends StatelessWidget {
                       const SizedBox(
                         height: 12,
                       ),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
+                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             Row(
@@ -127,7 +126,7 @@ class MealItem extends StatelessWidget {
                             ),
                           ],
                         ),
-                      ),
+
                     ],
                   ),
                 ),

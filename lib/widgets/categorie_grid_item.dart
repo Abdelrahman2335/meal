@@ -4,15 +4,17 @@ import 'package:meal/models/category.dart';
 import 'package:meal/models/meal.dart';
 import 'package:meal/screens/meal_screen.dart';
 
-class CategorieGridItem extends StatelessWidget {
-  const CategorieGridItem({super.key, required this.category});
+class CategoriesGridItem extends StatelessWidget {
+  const CategoriesGridItem({super.key, required this.category, required this.onToggleFavorite});
 
   final Category category;
+  final void Function(Meal meal) onToggleFavorite;
+
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(5),
       child: InkWell(
         /// like GestureDetector but InkWell have Visual effect
         onTap: () {
@@ -21,7 +23,7 @@ class CategorieGridItem extends StatelessWidget {
             MaterialPageRoute(
               builder: (ctx) =>  MealsScreen(
                 title: category.title,
-                meals: filterMeal,
+                meals: filterMeal, onToggleFavorite: onToggleFavorite,
               ),
             ),
           );
@@ -47,7 +49,7 @@ class CategorieGridItem extends StatelessWidget {
             style: Theme.of(context)
                 .textTheme
                 .titleLarge!
-                .copyWith(color: Theme.of(context).colorScheme.onBackground),
+                .copyWith(color: Theme.of(context).colorScheme.onSurface),
           ),
         ),
       ),

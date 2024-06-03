@@ -3,9 +3,14 @@ import 'package:flutter/material.dart';
 import '../models/meal.dart';
 
 class MealDetailScreen extends StatelessWidget {
-  const MealDetailScreen({super.key, required this.meal});
+  const MealDetailScreen({
+    super.key,
+    required this.meal,
+    required this.onToggleFavorite,
+  });
 
   final Meal meal;
+  final void Function(Meal meal) onToggleFavorite;
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +19,7 @@ class MealDetailScreen extends StatelessWidget {
         title: Text(meal.title),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () => onToggleFavorite(meal),
             icon: const Icon(Icons.star),
           ),
         ],
@@ -39,16 +44,41 @@ class MealDetailScreen extends StatelessWidget {
               style: Theme.of(context)
                   .textTheme
                   .bodyMedium!
-                  .copyWith(color: Theme.of(context).colorScheme.onBackground),
+                  .copyWith(color: Theme.of(context).colorScheme.primary),
             ),
-            const SizedBox(height: 14,),
-            for(final ingradient in meal.ingredients)
+            const SizedBox(
+              height: 14,
+            ),
+            for (final ingradient in meal.ingredients)
               Text(
                 ingradient,
                 style: Theme.of(context)
                     .textTheme
                     .bodyMedium!
-                    .copyWith(color: Theme.of(context).colorScheme.onBackground),
+                    .copyWith(color: Theme.of(context).colorScheme.onSurface),
+              ),
+            const SizedBox(
+              height: 24,
+            ),
+            Text(
+              "Steps",
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium!
+                  .copyWith(color: Theme.of(context).colorScheme.primary),
+            ),
+            for (final step in meal.steps)
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                child: Text(
+                  textAlign: TextAlign.center,
+                  step,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .copyWith(color: Theme.of(context).colorScheme.onSurface),
+                ),
               ),
           ],
         ),
