@@ -42,7 +42,7 @@ class MealItem extends StatelessWidget {
       /// the shape that you have done in the Card will not apply on the child,
       /// so we will use clipBehavior to control this child and apply the shape
       child: InkWell(
-          onTap: () => onSelectMeal,
+          onTap: () => onSelectMeal(meal),
           child: Stack(
             children: [
 
