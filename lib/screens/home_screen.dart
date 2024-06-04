@@ -4,6 +4,7 @@ import 'package:meal/widgets/main_drawer.dart';
 
 import '../models/meal.dart';
 import 'categories_screen.dart';
+import 'filter_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -46,6 +47,18 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  void _setScreen(String identifier) {
+    if (identifier == "filters") {
+      Navigator.of(context).pop();
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (ctx) => const FilterScreen(),
+        ),
+      );
+    }
+  }
+
   @override
 
   /// note we change the screens using this simple code because it's only tow screens
@@ -66,7 +79,9 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text(activeScreenTitle),
       ),
       body: activeScreen,
-      drawer: const mainDrawer(),
+      drawer: mainDrawer(
+        onSelectedScreen: _setScreen,
+      ),
       bottomNavigationBar: BottomNavigationBar(
         onTap: _selectScreen,
         currentIndex: _selectedScreenIndex,
