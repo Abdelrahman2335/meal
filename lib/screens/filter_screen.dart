@@ -1,22 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:meal/Provider/filter_provider.dart';
 
-class FilterScreen extends StatefulWidget {
-  const FilterScreen({super.key, required this.currentFilter});
-
-  final Map<Filter, bool> currentFilter;
+class FilterScreen extends ConsumerStatefulWidget {
+  const FilterScreen({
+    super.key,
+  });
 
   @override
-  State<FilterScreen> createState() => _FilterScreenState();
+  ConsumerState<FilterScreen> createState() => _FilterScreenState();
 }
 
-enum Filter {
-  glutenFree,
-  lactoseFree,
-  vegan,
-  vegetarian,
-}
-
-class _FilterScreenState extends State<FilterScreen> {
+class _FilterScreenState extends ConsumerState<FilterScreen> {
   bool _glutenFreeFilter = false;
   bool _veganFilter = false;
   bool _vegetarianFilter = false;
@@ -25,10 +20,11 @@ class _FilterScreenState extends State<FilterScreen> {
   @override
   void initState() {
     super.initState();
-    _glutenFreeFilter = widget.currentFilter[Filter.glutenFree]!;
-    _lactoseFreeFilter = widget.currentFilter[Filter.lactoseFree]!;
-    _veganFilter = widget.currentFilter[Filter.vegan]!;
-    _vegetarianFilter = widget.currentFilter[Filter.vegetarian]!;
+    final Map<Filter, bool> activeFilters = ref.read(filtersProvider);
+    _glutenFreeFilter = activeFilters[Filter.glutenFree]!;
+    _lactoseFreeFilter = activeFilters[Filter.lactoseFree]!;
+    _veganFilter = activeFilters[Filter.vegan]!;
+    _vegetarianFilter = activeFilters[Filter.vegetarian]!;
   }
 
   @override
@@ -51,13 +47,13 @@ class _FilterScreenState extends State<FilterScreen> {
       // ),
       body: WillPopScope(
         onWillPop: () async {
-          Navigator.of(context).pop({
+          ref.read(filtersProvider.notifier).setFilters({
             Filter.glutenFree: _glutenFreeFilter,
             Filter.lactoseFree: _lactoseFreeFilter,
             Filter.vegan: _veganFilter,
             Filter.vegetarian: _vegetarianFilter,
           });
-          return false;
+          return true;
         },
         child: Column(
           children: [

@@ -1,6 +1,8 @@
-
 import 'package:flutter/material.dart';
-import 'package:meal/data/dummy_data.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:meal/Provider/favorites_provider.dart';
+import 'package:meal/Provider/filter_provider.dart';
+import 'package:meal/Provider/meals_provider.dart';
 import 'package:meal/screens/meal_screen.dart';
 import 'package:meal/widgets/main_drawer.dart';
 
@@ -8,49 +10,17 @@ import '../models/meal.dart';
 import 'categories_screen.dart';
 import 'filter_screen.dart';
 
-const kInitialFilter = {
-  Filter.glutenFree: false,
-  Filter.lactoseFree: false,
-  Filter.vegan: false,
-  Filter.vegetarian: false,
-};
-
-class HomeScreen extends StatefulWidget {
+/// ConsumerStatefulWidget = StatefulWidget
+/// ConsumerWidget = StatelessWidget
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   int _selectedScreenIndex = 0;
-  final List<Meal> _favorateMeal = [];
-
-  Map<Filter, bool> _selectedFilter = kInitialFilter;
-
-  void _showInfoMessage(String message) {
-    ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-      ),
-    );
-  }
-
-  void toggleFavorateMeal(Meal meal) {
-    final isExist = _favorateMeal.contains(meal);
-    if (isExist) {
-      setState(() {
-        _favorateMeal.remove(meal);
-      });
-      _showInfoMessage("Meal is removed");
-    } else {
-      setState(() {
-        _favorateMeal.add(meal);
-      });
-      _showInfoMessage("Marked as a Favorate!");
-    }
-  }
 
   void _selectScreen(int index) {
     setState(() {
@@ -64,11 +34,9 @@ class _HomeScreenState extends State<HomeScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (ctx) => FilterScreen(
-            currentFilter: _selectedFilter,
-          ),
+          builder: (ctx) => const FilterScreen(),
         ),
-      ).then((value) => _selectedFilter = value ?? kInitialFilter);
+      );
     }
   }
 
@@ -76,31 +44,35 @@ class _HomeScreenState extends State<HomeScreen> {
 
   /// note we Navigate throw screens using this simple code because it's only tow screens
   Widget build(BuildContext context) {
-    final List<Meal> availableMeals = dummyMeals.where((meal) {
-      if (_selectedFilter[Filter.glutenFree]! && !meal.isGlutenFree) {
+    ///read it's only read the provider and if there any changes happen it does not rebuild the widget,
+    ///but watch it detect any changes happen in the provider and rebuild the widget
+    // ref.read(mealsProvider);
+    final meals = ref.watch(mealsProvider);
+    final Map<Filter, bool> selectedFilter = ref.watch(filtersProvider);
+    final List<Meal> availableMeals = meals.where((meal) {
+      if (selectedFilter[Filter.glutenFree]! && !meal.isGlutenFree) {
         return false;
       }
-      if (_selectedFilter[Filter.lactoseFree]! && !meal.isLactoseFree) {
+      if (selectedFilter[Filter.lactoseFree]! && !meal.isLactoseFree) {
         return false;
       }
-      if (_selectedFilter[Filter.vegan]! && !meal.isVegan) {
+      if (selectedFilter[Filter.vegan]! && !meal.isVegan) {
         return false;
       }
-      if (_selectedFilter[Filter.vegetarian]! && !meal.isVegetarian) {
+      if (selectedFilter[Filter.vegetarian]! && !meal.isVegetarian) {
         return false;
       } else {
         return true;
       }
     }).toList();
     Widget activeScreen = CategorieScreen(
-      onToggleFavorite: toggleFavorateMeal,
       availableMeals: availableMeals,
     );
     String activeScreenTitle = "Categories";
     if (_selectedScreenIndex == 1) {
+      final List<Meal> favorateMeal = ref.watch(favoritesMealsProvider);
       activeScreen = MealsScreen(
-        meals: _favorateMeal,
-        onToggleFavorite: toggleFavorateMeal,
+        meals: favorateMeal,
       );
       activeScreenTitle = "Favorite";
     }
