@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:meal/data/dummy_data.dart';
 import 'package:meal/models/category.dart';
 import 'package:meal/models/meal.dart';
 import 'package:meal/screens/meal_screen.dart';
 
 class CategoriesGridItem extends StatelessWidget {
-  const CategoriesGridItem({super.key, required this.category, required this.onToggleFavorite});
+  const CategoriesGridItem({super.key, required this.category, required this.onToggleFavorite, required this.availableMeals});
 
   final Category category;
   final void Function(Meal meal) onToggleFavorite;
+  final List<Meal> availableMeals;
 
 
   @override
@@ -18,7 +18,7 @@ class CategoriesGridItem extends StatelessWidget {
       child: InkWell(
         /// like GestureDetector but InkWell have Visual effect
         onTap: () {
-         final List<Meal> filterMeal = dummyMeals.where((element) => element.categories.contains(category.id)).toList();
+         final List<Meal> filterMeal = availableMeals.where((element) => element.categories.contains(category.id)).toList();
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (ctx) =>  MealsScreen(

@@ -1,10 +1,19 @@
+
 import 'package:flutter/material.dart';
+import 'package:meal/data/dummy_data.dart';
 import 'package:meal/screens/meal_screen.dart';
 import 'package:meal/widgets/main_drawer.dart';
 
 import '../models/meal.dart';
 import 'categories_screen.dart';
 import 'filter_screen.dart';
+
+const kInitialFilter = {
+  Filter.glutenFree: false,
+  Filter.lactoseFree: false,
+  Filter.vegan: false,
+  Filter.vegetarian: false,
+};
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,6 +25,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedScreenIndex = 0;
   final List<Meal> _favorateMeal = [];
+
+  Map<Filter, bool> _selectedFilter = kInitialFilter;
 
   void _showInfoMessage(String message) {
     ScaffoldMessenger.of(context).clearSnackBars();
@@ -48,23 +59,42 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _setScreen(String identifier) {
+    Navigator.of(context).pop();
     if (identifier == "filters") {
-      Navigator.of(context).pop();
-      Navigator.pushReplacement(
+      Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (ctx) => const FilterScreen(),
+          builder: (ctx) => FilterScreen(
+            currentFilter: _selectedFilter,
+          ),
         ),
-      );
+      ).then((value) => _selectedFilter = value ?? kInitialFilter);
     }
   }
 
   @override
 
-  /// note we change the screens using this simple code because it's only tow screens
+  /// note we Navigate throw screens using this simple code because it's only tow screens
   Widget build(BuildContext context) {
+    final List<Meal> availableMeals = dummyMeals.where((meal) {
+      if (_selectedFilter[Filter.glutenFree]! && !meal.isGlutenFree) {
+        return false;
+      }
+      if (_selectedFilter[Filter.lactoseFree]! && !meal.isLactoseFree) {
+        return false;
+      }
+      if (_selectedFilter[Filter.vegan]! && !meal.isVegan) {
+        return false;
+      }
+      if (_selectedFilter[Filter.vegetarian]! && !meal.isVegetarian) {
+        return false;
+      } else {
+        return true;
+      }
+    }).toList();
     Widget activeScreen = CategorieScreen(
       onToggleFavorite: toggleFavorateMeal,
+      availableMeals: availableMeals,
     );
     String activeScreenTitle = "Categories";
     if (_selectedScreenIndex == 1) {

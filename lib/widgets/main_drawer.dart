@@ -38,7 +38,6 @@ class mainDrawer extends StatelessWidget {
           ),
           ListTile(
             onTap: () {
-              Navigator.pop(context);
               onSelectedScreen("meal");
             },
             leading: Icon(

@@ -3,9 +3,8 @@ import 'package:meal/models/category.dart';
 
 import '../models/meal.dart';
 
-
 // Constants in Dart should be written in lowerCamelcase.
- List<Category> availableCategories = [
+List<Category> availableCategories = [
   Category(
     id: 'c1',
     title: 'Italian',
@@ -58,7 +57,7 @@ import '../models/meal.dart';
   ),
 ];
 
- List<Meal> dummyMeals = [
+List<Meal> dummyMeals = [
   const Meal(
     id: 'm1',
     categories: [
@@ -191,8 +190,8 @@ import '../models/meal.dart';
   const Meal(
     id: 'm5',
     categories: [
-      'c2'
-          'c5',
+      'c2',
+      'c5',
       'c10',
     ],
     title: 'Salad with Smoked Salmon',

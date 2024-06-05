@@ -5,8 +5,9 @@ import 'package:meal/widgets/categorie_grid_item.dart';
 import '../models/meal.dart';
 
 class CategorieScreen extends StatelessWidget {
-  const CategorieScreen({super.key, required this.onToggleFavorite});
+  const CategorieScreen({super.key, required this.onToggleFavorite, required this.availableMeals});
   final void Function(Meal meal) onToggleFavorite;
+  final List<Meal> availableMeals;
 
 
   @override
@@ -19,7 +20,7 @@ class CategorieScreen extends StatelessWidget {
         children: [
           for(var element in availableCategories)
             /// note that we didn't use {} in this loop because this is flutter loop not dart
-          CategoriesGridItem(category: element, onToggleFavorite: onToggleFavorite,)
+          CategoriesGridItem(category: element, onToggleFavorite: onToggleFavorite, availableMeals: availableMeals,)
         ],
     );
   }
