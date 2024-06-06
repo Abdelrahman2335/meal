@@ -2,100 +2,65 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meal/Provider/filter_provider.dart';
 
-class FilterScreen extends ConsumerStatefulWidget {
+class FilterScreen extends ConsumerWidget {
   const FilterScreen({
     super.key,
   });
 
   @override
-  ConsumerState<FilterScreen> createState() => _FilterScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final Map<Filter, bool> activeFilters = ref.watch(filtersProvider);
 
-class _FilterScreenState extends ConsumerState<FilterScreen> {
-  bool _glutenFreeFilter = false;
-  bool _veganFilter = false;
-  bool _vegetarianFilter = false;
-  bool _lactoseFreeFilter = false;
-
-  @override
-  void initState() {
-    super.initState();
-    final Map<Filter, bool> activeFilters = ref.read(filtersProvider);
-    _glutenFreeFilter = activeFilters[Filter.glutenFree]!;
-    _lactoseFreeFilter = activeFilters[Filter.lactoseFree]!;
-    _veganFilter = activeFilters[Filter.vegan]!;
-    _vegetarianFilter = activeFilters[Filter.vegetarian]!;
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Your Filter"),
       ),
-      // drawer: mainDrawer(
-      //   onSelectedScreen: (identifier) {
-      //     if (identifier == "meal") {
-      //       Navigator.pushReplacement(
-      //         context,
-      //         MaterialPageRoute(builder: (ctx) => const HomeScreen()),
-      //       );
-      //     } else {
-      //       Navigator.pop(context);
-      //     }
-      //   },
-      // ),
-      body: WillPopScope(
-        onWillPop: () async {
-          ref.read(filtersProvider.notifier).setFilters({
-            Filter.glutenFree: _glutenFreeFilter,
-            Filter.lactoseFree: _lactoseFreeFilter,
-            Filter.vegan: _veganFilter,
-            Filter.vegetarian: _vegetarianFilter,
-          });
-          return true;
-        },
-        child: Column(
-          children: [
+      body: Column(
+        children: [
             customSwitch(
               context,
               "Gluten-free",
               "Only include gluten-free meals.",
-              _glutenFreeFilter,
-              (bool value) => setState(() {
-                _glutenFreeFilter = value;
-              }),
-            ),
+            activeFilters[Filter.glutenFree]!,
+            (bool value) => {
+              ref
+                  .watch(filtersProvider.notifier)
+                  .setFilter(Filter.glutenFree, value)
+            },
+          ),
             customSwitch(
               context,
               "Lactose-free",
               "Only include lactose-free meals.",
-              _lactoseFreeFilter,
-              (bool value) => setState(() {
-                _lactoseFreeFilter = value;
-              }),
-            ),
+            activeFilters[Filter.lactoseFree]!,
+            (bool value) => {
+              ref
+                  .watch(filtersProvider.notifier)
+                  .setFilter(Filter.lactoseFree, value)
+            },
+          ),
             customSwitch(
               context,
               "Vegan",
               "Only include vegan meals.",
-              _veganFilter,
-              (bool value) => setState(() {
-                _veganFilter = value;
-              }),
-            ),
+            activeFilters[Filter.vegan]!,
+            (bool value) => {
+              ref.watch(filtersProvider.notifier).setFilter(Filter.vegan, value)
+            },
+          ),
             customSwitch(
               context,
               "Vegetarian",
               "Only include vegetarian meals.",
-              _vegetarianFilter,
-              (bool value) => setState(() {
-                _vegetarianFilter = value;
-              }),
-            ),
+            activeFilters[Filter.vegetarian]!,
+            (bool value) => {
+              ref
+                  .watch(filtersProvider.notifier)
+                  .setFilter(Filter.vegetarian, value)
+            },
+          ),
           ],
         ),
-      ),
     );
   }
 
