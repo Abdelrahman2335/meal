@@ -21,7 +21,7 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context,WidgetRef ref) {
     final List<Meal> availableMeals = ref.watch(filteredMealsProvider);
     final selectedScreenIndex = ref.watch(navBarProvider);
-    ///read it's only read the provider and if there any changes happen it does not rebuild the widget,
+    ///read: It's only read the provider and if there any changes happen it does not rebuild the widget,
     ///but watch it detect any changes happen in the provider and rebuild the widget
     // ref.read(mealsProvider);
     Widget activeScreen = CategorieScreen(
